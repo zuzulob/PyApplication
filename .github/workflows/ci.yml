@@ -10,7 +10,7 @@ jobs:
 
     steps:
     - name: checking Repository
-      uses: actions/repository@v2
+      uses: actions/checkout@v2
     
     - name: Setting Python
       uses: actions/setup-python@v2
