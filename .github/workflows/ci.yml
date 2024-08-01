@@ -20,13 +20,15 @@ jobs:
 
       - name: Install dependencies
         run: |
+          cd Services
           python -m pip install --upgrade pip
           pip install -r requirements.txt -t .python_packages/lib/site-packages
-
+          cd ..
       - name: Zip the function app
         run: |
-          zip -r functionapp.zip .
-    
+          cd Services
+          zip -r ../functionapp.zip ./*
+          cd ..
       - name: Upload zip artifact
         uses: actions/upload-artifact@v2
         with:
