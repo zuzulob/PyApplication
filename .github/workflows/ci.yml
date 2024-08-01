@@ -23,10 +23,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Zip the function app folder
+      - name: Zip the function app
         run: |
-          zip -r functionapp.zip . -x "*.git*"
-
+          zip -r functionapp.zip .
+    
+      - name: Upload zip artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: functionapp
+          path: functionapp.zip
+          
       - name: Authenticate with Azure
         uses: azure/login@v1
         with:
@@ -35,3 +41,10 @@ jobs:
       - name: Deploy to Azure Function App
         run: |
           az functionapp deployment source config-zip --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --name ${{ secrets.AZURE_FUNCTION_APP_NAME }} --src functionapp.zip
+
+      - name: Deploy to Azure Function App
+        uses: azure/functions-action@v1
+        with:
+          app-name: ${{ secrets.AZURE_FUNCTION_APP_NAME }}
+          package: functionapp.zip
+          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
